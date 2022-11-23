@@ -8,7 +8,7 @@ void execute();
 
 //=================================================================================================
 // This is the 32-byte wide structure of a single record.   A record contains 1 data-cycle's worth
-// of data.
+// of data.  Data types beginning with "be_" are big-endian
 //=================================================================================================
 struct cycle_t
 {
