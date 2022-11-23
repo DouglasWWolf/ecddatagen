@@ -18,11 +18,9 @@ const uint32_t BYTES_PER_ROW   = BYTES_PER_CYCLE * CYCLES_PER_ROW;  /* 2048 byte
 struct cycle_t
 {
     uint8_t     cycle;
-    uint8_t     dummy1;
-    uint8_t     dummy2;
+    uint8_t     dummy1[2];
     be_uint32_t row; 
-    uint8_t     dummy3;
-    uint8_t     dummy4;
+    uint8_t     dummy2[2];
     uint8_t     filler[23];
 } record;
 //=================================================================================================
