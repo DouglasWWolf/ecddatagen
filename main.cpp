@@ -1,0 +1,86 @@
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "endian_types.h"
+
+void execute();
+
+
+//=================================================================================================
+// This is the 32-byte wide structure of a single record.   A record contains 1 data-cycle's worth
+// of data.
+//=================================================================================================
+struct cycle_t
+{
+    uint8_t     cycle;
+    uint8_t     dummy1;
+    uint8_t     dummy2;
+    be_uint32_t row; 
+    uint8_t     dummy3;
+    uint8_t     dummy4;
+    uint8_t     filler[23];
+} record;
+//=================================================================================================
+
+
+//=================================================================================================
+// main() - Execution starts here - no command line options
+//=================================================================================================
+int main()
+{
+    execute();
+}
+//=================================================================================================
+
+
+//=================================================================================================
+// execute() - Writes a data-file containing however many rows of data will fit into 4GB.
+//
+// Each row of data consists of 64 cycles, with each cycle being 32-bytes wide, for a total of
+// 2048 bytes per row.
+//
+// The code below stamps the row # and cycle # into every cycle-record that gets written
+//=================================================================================================
+void execute()
+{
+    const char* filename = "bigdata.dat";
+
+    // Open the file we're going to write, and complain if we can't
+    FILE* ofile = fopen(filename, "w");
+    if (ofile == nullptr)
+    {
+        fprintf(stderr, "Can't create %s\n", filename);
+        exit(1);
+    }   
+
+    // The dummy fields contain 0xFF for easy visibilty when viewed in Vivado
+    record.dummy1 = record.dummy2 = record.dummy3 = record.dummy4 = 0xFF;
+    
+    // The "filler" field just contains consecutive bytes starting at 0
+    for (int i=0; i<sizeof(record.filler); ++i) record.filler[i] = i;
+
+    // How many rows will fit into 4GB?
+    uint32_t row_count = 0x100000000LL / 2048;
+
+    // Loop through every row of data we're going to write
+    for (uint32_t row = 0; row < row_count; ++row)
+    {
+        // Store the row number into the record
+        record.row = row;
+
+        // Loop through each of the 64 cycles in a row
+        for (int cycle = 0; cycle <64; ++cycle)
+        {
+            // Store the cycle number into the record
+            record.cycle = cycle;
+
+            // And write the record to disk
+            fwrite(&record, 1, sizeof record, ofile);
+
+        }
+    }
+
+    // Close the output file, we're done
+    fclose(ofile);
+}
+//=================================================================================================
