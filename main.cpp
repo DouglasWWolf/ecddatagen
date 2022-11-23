@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <cstring>
 #include "endian_types.h"
 
 void execute();
@@ -54,8 +55,8 @@ void execute()
         exit(1);
     }   
 
-    // The dummy fields contain 0xFF for easy visibilty when viewed in Vivado
-    record.dummy1 = record.dummy2 = record.dummy3 = record.dummy4 = 0xFF;
+    // The default value of every field in the record is 0xFF
+    memset(&record, 0xFF, sizeof record);
     
     // The "filler" field just contains consecutive bytes starting at 0
     for (int i=0; i<sizeof(record.filler); ++i) record.filler[i] = i;
