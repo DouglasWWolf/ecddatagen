@@ -8,7 +8,7 @@ void execute();
 // The geometry of a row of data
 const uint32_t BYTES_PER_CYCLE = 32;
 const uint32_t CYCLES_PER_ROW  = 64;
-const uint32_t BYTES_PER_ROW   = BYTES_PER_CYCLE * CYCLES_PER_ROW;
+const uint32_t BYTES_PER_ROW   = BYTES_PER_CYCLE * CYCLES_PER_ROW;  /* 2048 bytes */
 
 //=================================================================================================
 // This is the 32-byte wide structure of a single record.   A record contains 1 data-cycle's worth
@@ -39,9 +39,6 @@ int main()
 
 //=================================================================================================
 // execute() - Writes a data-file containing however many rows of data will fit into 4GB.
-//
-// Each row of data consists of 64 cycles, with each cycle being 32-bytes wide, for a total of
-// 2048 bytes per row.
 //
 // The code below stamps the row # and cycle # into every cycle-record that gets written
 //=================================================================================================
