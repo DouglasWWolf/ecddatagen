@@ -5,6 +5,7 @@
 
 void execute();
 
+// The geometry of a row of data
 const uint32_t BYTES_PER_CYCLE = 32;
 const uint32_t CYCLES_PER_ROW  = 64;
 const uint32_t BYTES_PER_ROW   = BYTES_PER_CYCLE * CYCLES_PER_ROW;
@@ -77,8 +78,8 @@ void execute()
             // Store the cycle number into the record
             record.cycle = cycle;
 
-            // And write the record to disk
-            fwrite(&record, 1, sizeof record, ofile);
+            // And write the record (i.e., one data-cycle) to disk
+            fwrite(&record, 1, BYTES_PER_CYCLE, ofile);
         }
     }
 
